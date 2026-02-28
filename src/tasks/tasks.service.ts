@@ -23,7 +23,7 @@ export class TasksService {
   async findOne(id: number) {
     const task = await this.prisma.task.findUnique({
       where: { id },
-      include: { board: true, user: true },
+      include: { user: true },
     });
     if (!task) throw new NotFoundException(`Task #${id} not found`);
     return task;
