@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { CreateTaskDto, TaskStatus } from './dto/create-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -14,8 +13,9 @@ export class TasksService {
     });
   }
 
-  findAll() {
+  findAll(status?: TaskStatus) {
     return this.prisma.task.findMany({
+      where: status ? { status } : undefined,
       include: { board: true, user: true },
     });
   }
@@ -27,15 +27,6 @@ export class TasksService {
     });
     if (!task) throw new NotFoundException(`Task #${id} not found`);
     return task;
-  }
-
-  async update(id: number, updateTaskDto: UpdateTaskDto) {
-    await this.findOne(id);
-    return this.prisma.task.update({
-      where: { id },
-      data: updateTaskDto,
-      include: { board: true, user: true },
-    });
   }
 
   async remove(id: number) {
