@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateBoardDto } from './dto/create-board.dto';
-import { UpdateBoardDto } from './dto/update-board.dto';
 
 @Injectable()
 export class BoardsService {
@@ -22,11 +21,6 @@ export class BoardsService {
     });
     if (!board) throw new NotFoundException(`Board #${id} not found`);
     return board;
-  }
-
-  async update(id: number, updateBoardDto: UpdateBoardDto) {
-    await this.findOne(id);
-    return this.prisma.board.update({ where: { id }, data: updateBoardDto });
   }
 
   async remove(id: number) {
